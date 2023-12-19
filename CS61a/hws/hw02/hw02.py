@@ -148,14 +148,13 @@ def count_coins(total):
 def make_changes(current, coin):
     if current == 0:
         return 1
-    if current < 0:
+    elif current < 0:
         return 0
-    sum = 0
-    while coin:
-        count = make_changes(current - coin, coin)
-        coin = next_largest_coin(coin)
-        sum += count
-    return sum
+    elif not coin:
+        return 0
+    with_coin = make_changes(current - coin, coin)
+    without_coin = make_changes(current, next_largest_coin(coin))
+    return with_coin + without_coin
 
 
 
