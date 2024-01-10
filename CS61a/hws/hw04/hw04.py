@@ -103,17 +103,19 @@ def repeated(t, k):
     "*** YOUR CODE HERE ***"
     times = 0
     num = None
-    for i in range(len(t)):
+    temp = next(t)
+    while(temp):
         if times == 0:
-            num = t[i]
+            num = temp
             times += 1
-        elif t[i] == num:
+        elif temp == num:
             times += 1
             if times == k:
                 return num
         else:
-            num = t[i]
+            num = temp
             times = 1
+        temp = next(t)
 
 def permutations(seq):
     """Generates all permutations of the given sequence. Each permutation is a
@@ -138,6 +140,12 @@ def permutations(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
+    if len(seq) == 0:
+        yield []
+    else:
+        for i in range(len(seq)):
+            for j in permutations(seq[:i] + seq[i+1:]):
+                yield [seq[i]] + j
 
 
 def make_joint(withdraw, old_pass, new_pass):
@@ -179,6 +187,15 @@ def make_joint(withdraw, old_pass, new_pass):
     "Frozen account. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
+    result = withdraw(0, old_pass)
+    if type(result) == str:
+        return result
+    def joint(amount, password):
+        if password == new_pass:
+            return withdraw(amount, old_pass)
+        return withdraw(amount, password)
+    return joint
+
 
 
 def remainders_generator(m):
@@ -213,6 +230,13 @@ def remainders_generator(m):
     11
     """
     "*** YOUR CODE HERE ***"
+    for i in range(m):
+        def gen():
+            n = m if i == 0 else i
+            while True:
+                yield n
+                n += m
+        yield gen()
 
 
 def naturals():
