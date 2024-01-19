@@ -1,0 +1,2 @@
+
+select "hello" as greeting;
