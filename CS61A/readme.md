@@ -1,10 +1,10 @@
-# CS 61A
+# CS61A: Structure and Interpretation of Computer Programs
 
 semester: **Fall 2020**
 
 language: **python**, **scheme** and some **SQL(SQLite)**
 
-website:[https://inst.eecs.berkeley.edu/~cs61a/fa20/]
+website:[https://inst.eecs.berkeley.edu/~cs61a/fa20/](https://inst.eecs.berkeley.edu/~cs61a/fa20/)
 
 ## elaboration
 
