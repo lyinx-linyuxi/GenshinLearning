@@ -1,8 +1,0 @@
-print("DEBUG: ")
-print("DEBUG: ")
-print("DEBUG: ")
-print("ret1", end="")
-print("DEBUG: ")
-print("ret2", end="")
-print("DEBUG: ")
-print("ret3", end="")
