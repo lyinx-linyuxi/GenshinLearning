@@ -2,7 +2,7 @@
 
 semester: **Fall 2020**
 
-language: **python** and **scheme**
+language: **python**, **scheme** and some **SQL(SQLite)**
 
 website:[https://inst.eecs.berkeley.edu/~cs61a/fa20/]
 
