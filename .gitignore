@@ -1,2 +1,8 @@
 .vscode
+
+# for python
 __pycache__
+
+# for C
+*.exe
+*.o
