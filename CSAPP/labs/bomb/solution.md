@@ -5,7 +5,7 @@ bomb lab solution
 ## Phase 1
 
 According to the ```string_length``` return value, the string length is 52 bytes. And either ```%rsi``` or ```%rdi``` stores the pointer that points to the start of the string.
-Use ```x/52xb %rsi/%rdi``` to inspect the value and chanslate into characters.
+Use ```x/52sb %rsi/%rdi``` to inspect the string.
 
 ## Phase 2
 
@@ -42,3 +42,11 @@ A Linked list sort, 6 nodes are here, so you input will firstly be checked wheth
 ## secret_phase
 
 This phase will call ```func7``` which makes recursive calls, and there are so many branches, i can't figure out what they are doing but i manage to find the answer. Branch 1 in line 0x40120b will leads to wrong return value, so never let %rdi equals 0(when too many recursive calls). And according the phase code, target return value is 2, and there exsits branches that add 1 to %eax, double %eax, let %eax equals 0 and return. So you need to arrange them to get the value 2. And you'll find the branch makes ```%eax``` equals 0 and return is **je**, so you can determine the result is 22.
+
+Well, i don know how to trigger it, i just use gdb jump there and get an answer.
+
+some reference:[https://wdxtub.com/csapp/thick-csapp-lab-2/2016/04/16/](https://wdxtub.com/csapp/thick-csapp-lab-2/2016/04/16/)
+
+In phase_6 phase_defused call:
+![1706606951533](image/solution/1706606951533.png)
+input is what you type in, and the fomat and target string you can see its "DrEvil", check the format, only phase_4 matches, so add the string "DrEvil", you'll trigger the secret phase.
