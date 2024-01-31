@@ -1,6 +1,8 @@
 # bomb lab
 
-bomb lab solution
+bomb lab solution.
+
+All solutions may be just part.
 
 ## Phase 1
 
