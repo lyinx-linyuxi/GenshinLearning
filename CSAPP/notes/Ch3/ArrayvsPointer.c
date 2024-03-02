@@ -8,6 +8,10 @@ int main(){
         {4, 5, 6},
         {7, 8, 9}
     };
+    printf("%p\n", &arr);
+    printf("%p\n", &arr + 1);
+    printf("%p\n", arr);
+    printf("%p\n", arr + 1);
     printf("Arrays\n");
     printf("arr[0] at %p\n", arr[0]);
     printf("arr[1] at %p\n", arr[1]);

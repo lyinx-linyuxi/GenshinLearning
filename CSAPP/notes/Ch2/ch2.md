@@ -12,6 +12,10 @@ Differences between single and double:**&**, **&&** and **|**, **||**.
 
 In C, when an opration whose 2 operands has 1 unsigned and 1 two's complements', the two's complement number will be casting to the unsigned number.
 
+- Bit pattern is maintained
+- But reinterpreted
+- Can have unexpected effects: adding or subtracting $2^w$
+
 an infinite loop cause by this casting:
 
 ```C
