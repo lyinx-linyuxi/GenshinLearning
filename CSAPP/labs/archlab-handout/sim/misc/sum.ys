@@ -1,0 +1,38 @@
+# Execution begins at address 0 
+	.pos 0 
+	irmovq stack, %rsp  	# Set up stack pointer  
+	call main		# Execute main program
+	halt			# Terminate program 
+
+# Linked list of 3 elements
+# Sample linked list
+    .align 8
+ele1:   .quad 0x00a
+    .quad ele2
+ele2:   .quad 0x0b0
+    .quad ele3
+ele3:   .quad 0xc00
+    .quad 0
+
+main:   irmovq ele1,%rdi	
+	irmovq $4,%rsi
+	call sum		# sum(ele1)
+	ret 
+
+# long sum(long *list)
+# list in %rdi
+sum:    irmovq $8,%r8           # Constant 8
+	xorq %rax,%rax		# sum = 0
+loop:   mrmovq (%rdi), %rbx   # Load list.val into %rbx
+    addq %rbx, %rax       # sum += list.val
+    addq %r8, %rdi        # rdi = &list.next
+    mrmovq (%rdi), %rbx   # Load list.next into %rbx
+    andq %rbx, %rbx       # Check if list.next == 0
+    je done               # If list.next == 0, jump to done
+    rrmovq %rbx, %rdi     # list = list.next
+    jmp loop              # Jump to loop
+done:   ret
+
+# The stack starts here and grows to lower addresses
+	.pos 0x200		
+stack:	 

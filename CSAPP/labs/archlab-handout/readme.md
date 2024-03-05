@@ -29,7 +29,7 @@ main:   irmovq Stack, %rsp      # Set up stack pointer
 StartFun:
 ```
 
-出现以下情况那就是GitHub上传的时候将unix风格换行自动纠正成了Windows换行再上传的，使用工具改回来就行。
+出现以上情况那就是GitHub上传的时候将unix风格换行自动纠正成了Windows换行再上传的，使用工具改回来就行。
 
 ```shell
 Linux> sudo apt-get insatll dos2unix
