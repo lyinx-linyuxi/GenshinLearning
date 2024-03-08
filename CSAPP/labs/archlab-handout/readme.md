@@ -74,3 +74,29 @@ Linux> dos2unix gen-driver.pl
 - 分支预测降低惩罚
 
 需要改hcl文件，改不动了。
+
+### 改动了
+
+[参照思路](https://zhuanlan.zhihu.com/p/661344632?utm_id=0)
+
+参照思路将```加载/使用冲突```改为不需要暂停，而是直接转发的方式实现，一开始发现并没有很大的提升，随后意外发现，将原来为了避免冲突而进行指令的间隔插入，改为之前产生冲突的形式（如下所示），提升巨尼玛的大。不知道为什么，个人觉得是硬件提升带来的巨大提升。然后我全改成了原来会产生冲突的形式，直接过了。
+
+```bash
+@@ -20,8 +20,8 @@ ncopy:
+        jl remainings
+ Loop1:
+        mrmovq (%rdi), %r8
+-       mrmovq 8(%rdi), %r9
+        rmmovq %r8, (%rsi)
++       mrmovq 8(%rdi), %r9
+        rmmovq %r9, 8(%rsi)
+        andq %r8, %r8
+        jle test1
+```
+
+最终结果：
+
+![1709879408561](image/readme/1709879408561.png)
+
+![1709879431662](image/readme/1709879431662.png)
+
