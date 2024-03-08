@@ -226,10 +226,12 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int equal = !(x ^ y);
-  int sign = !!((x >> 31) & ~(y >> 31));
-  int less = !!((x + (~y + 1)) >> 31);
-  return less | equal | sign;
+  int sfx = (x >> 31) & 1;
+  int sfy = (y >> 31) & 1;
+  int sign = sfx & (!sfy);
+  int equal = !(sfx ^ sfy) & (!(y ^ x));
+  int less = !(sfx ^ sfy) & (((x + (~y + 1)) >> 31) & 1);
+  return sign | equal | less;
 }
 //4
 /* 
