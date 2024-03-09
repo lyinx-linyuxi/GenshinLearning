@@ -1,0 +1,12 @@
+foo
+bar
+fooo
+fo
+bar
+bra
+fool
+bark
+# foobar
+foo bar 
+foobar
+foolbar

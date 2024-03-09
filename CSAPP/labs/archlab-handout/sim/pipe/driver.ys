@@ -1,11 +1,11 @@
 #######################################################################
-# Test for copying block of size 8;
+# Test for copying block of size 2;
 #######################################################################
 	.pos 0
 main:	irmovq Stack, %rsp  	# Set up stack pointer
 
 	# Set up arguments for copy function and then invoke it
-	irmovq $8, %rdx		# src and dst have 8 elements
+	irmovq $2, %rdx		# src and dst have 2 elements
 	irmovq dest, %rsi	# dst array
 	irmovq src, %rdi	# src array
 	call ncopy		 
@@ -31,7 +31,7 @@ ncopy:
 # You can modify this portion
 	# Loop header
 	iaddq $-8, %rdx
-	jle remainings
+	jl remainings
 Loop1:
 	mrmovq (%rdi), %r8
 	mrmovq 8(%rdi), %r9
@@ -87,72 +87,64 @@ testE:
 	jge Loop1
 
 remainings:
-	iaddq $8, %rdx
-	je Done
-	iaddq $-4, %rdx
-	jge move4
+	iaddq $4, %rdx
+	jg right
+	je move4
 	iaddq $2, %rdx
-	jge move2
-	jmp move1
-	
-move4:
-	mrmovq (%rdi), %r8
-	mrmovq 8(%rdi), %r9
-	mrmovq 16(%rdi), %r10
-	mrmovq 24(%rdi), %r11
-	rmmovq %r8, (%rsi)
-	rmmovq %r9, 8(%rsi)
-	rmmovq %r10, 16(%rsi)
-	rmmovq %r11, 24(%rsi)
-	andq %r8, %r8
-	jle m4a1
-	iaddq $1, %rax
-m4a1:
-	andq %r9, %r9
-	jle m4a2
-	iaddq $1, %rax
-m4a2:
-	andq %r10, %r10
-	jle m4a3
-	iaddq $1, %rax
-m4a3:
-	andq %r11, %r11
-	jle m4a4
-	iaddq $1, %rax
-m4a4:
-	andq %rdx, %rdx
-	je Done
-	iaddq $32, %rdi
-	iaddq $32, %rsi
+	je move2
+	jg move3
+	iaddq $1, %rdx
+	je move1
+	ret
+
+right:
 	iaddq $-2, %rdx
-	jge move2
-	jmp move1
+	je move6
+	jl move5
 
-move2:
-	mrmovq (%rdi), %r8
-	mrmovq 8(%rdi), %r9
-	rmmovq %r8, (%rsi)
-	rmmovq %r9, 8(%rsi)
+move7:
+	mrmovq $48(%rdi), %r8
+	rmmovq %r8, $48(%rsi)
 	andq %r8, %r8
-	jle m2a1
-	iaddq $1, %rax
-m2a1:
-	andq %r9, %r9
-	jle m2a2
-	iaddq $1, %rax
-m2a2:
-	andq %rdx, %rdx
-	je Done
-	iaddq $16, %rdi
-	iaddq $16, %rsi
-	jmp move1
-
-move1:	
+	jle move6
+	iaddq $-1, %rax
+move6:
+	mrmovq $40(%rdi), %r8
+	rmmovq %r8, $40(%rsi)
+	andq %r8, %r8
+	jle move5
+	iaddq $-1, %rax
+move5:
+	mrmovq $32(%rdi), %r8
+	rmmovq %r8, $32(%rsi)
+	andq %r8, %r8
+	jle move4
+	iaddq $-1, %rax
+move4:
+	mrmovq $24(%rdi), %r8
+	rmmovq %r8, $24(%rsi)
+	andq %r8, %r8
+	jle move3
+	iaddq $-1, %rax
+move3:
+	mrmovq $16(%rdi), %r8
+	rmmovq %r8, $16(%rsi)
+	andq %r8, %r8
+	jle move2
+	iaddq $-1, %rax
+move2:
+	mrmovq $8(%rdi), %r8
+	rmmovq %r8, $8(%rsi)
+	andq %r8, %r8
+	jle move1
+	iaddq $-1, %rax
+move1:
 	mrmovq (%rdi), %r8
 	rmmovq %r8, (%rsi)
 	andq %r8, %r8
 	jle Done
-	iaddq $1, %rax
+	iaddq $-1, %rax
+
 ##################################################################
 # Do not modify the following section of code
 # Function epilogue.
@@ -169,7 +161,7 @@ EndFun:
 
 # This is the correctness checking code.
 # It checks:
-#   1. %rax has 3.  Set %rax to 0xbbbb if not.
+#   1. %rax has 1.  Set %rax to 0xbbbb if not.
 #   2. The total length of the code is less than or equal to 1000.
 #      Set %rax to 0xcccc if not.
 #   3. The source data was copied to the destination.
@@ -179,7 +171,7 @@ EndFun:
 # If all checks pass, then sets %rax to 0xaaaa
 check:
 	# Return value test
-	irmovq $3,%r10
+	irmovq $1,%r10
 	subq %r10,%rax
 	je checkb
 	irmovq $0xbbbb,%rax  # Failed test #1
@@ -197,7 +189,7 @@ checkb:
 checkm:
 	irmovq dest, %rdx # Pointer to next destination location
 	irmovq src,%rbx   # Pointer to next source location
-	irmovq $8,%rdi  # Count
+	irmovq $2,%rdi  # Count
 	andq %rdi,%rdi
 	je checkpre         # Skip check if count = 0
 mcloop:
@@ -244,25 +236,13 @@ cdone:
 	.align 8
 src:
 	.quad -1
-	.quad -2
-	.quad -3
-	.quad 4
-	.quad -5
-	.quad -6
-	.quad 7
-	.quad 8
+	.quad 2
 	.quad 0xbcdefa # This shouldn't get moved
 
 	.align 16
 Predest:
 	.quad 0xbcdefa
 dest:
-	.quad 0xcdefab
-	.quad 0xcdefab
-	.quad 0xcdefab
-	.quad 0xcdefab
-	.quad 0xcdefab
-	.quad 0xcdefab
 	.quad 0xcdefab
 	.quad 0xcdefab
 Postdest:

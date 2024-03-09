@@ -20,8 +20,8 @@ ncopy:
 	jl remainings
 Loop1:
 	mrmovq (%rdi), %r8
-	rmmovq %r8, (%rsi)
 	mrmovq 8(%rdi), %r9
+	rmmovq %r8, (%rsi)
 	rmmovq %r9, 8(%rsi)	
 	andq %r8, %r8
 	jle test1
@@ -32,8 +32,8 @@ test1:
 	iaddq $1, %rax
 Loop2:
 	mrmovq 16(%rdi), %r8
-	rmmovq %r8, 16(%rsi)
 	mrmovq 24(%rdi), %r9
+	rmmovq %r8, 16(%rsi)
 	rmmovq %r9, 24(%rsi)
 	andq %r8, %r8
 	jle test2
@@ -44,8 +44,8 @@ test2:
 	iaddq $1, %rax	
 Loop3:
 	mrmovq 32(%rdi), %r8
-	rmmovq %r8, 32(%rsi)
 	mrmovq 40(%rdi), %r9
+	rmmovq %r8, 32(%rsi)
 	rmmovq %r9, 40(%rsi)
 	andq %r8, %r8
 	jle test3
@@ -56,8 +56,8 @@ test3:
 	iaddq $1, %rax	
 Loop4:
 	mrmovq 48(%rdi), %r8
-	rmmovq %r8, 48(%rsi)
 	mrmovq 56(%rdi), %r9
+	rmmovq %r8, 48(%rsi)
 	rmmovq %r9, 56(%rsi)
 	andq %r8, %r8
 	jle test4
@@ -73,72 +73,65 @@ testE:
 	jge Loop1
 
 remainings:
-	iaddq $8, %rdx
-	je Done
-	iaddq $-4, %rdx
-	jge move4
-	iaddq $2, %rdx
-	jge move2
-	jmp move1
-
-move4:
-	mrmovq (%rdi), %r8
-	rmmovq %r8, (%rsi)
-	mrmovq 8(%rdi), %r9
-	rmmovq %r9, 8(%rsi)
-	mrmovq 16(%rdi), %r10
-	rmmovq %r10, 16(%rsi)
-	mrmovq 24(%rdi), %r11
-	rmmovq %r11, 24(%rsi)
-	andq %r8, %r8
-	jle m4a1
-	iaddq $1, %rax
-m4a1:
-	andq %r9, %r9
-	jle m4a2
-	iaddq $1, %rax
-m4a2:
-	andq %r10, %r10
-	jle m4a3
-	iaddq $1, %rax
-m4a3:
-	andq %r11, %r11
-	jle m4a4
-	iaddq $1, %rax
-m4a4:
-	andq %rdx, %rdx
-	je Done
-	iaddq $32, %rdi
-	iaddq $32, %rsi
+	iaddq $4, %rdx
+	jl left
+	je move4
 	iaddq $-2, %rdx
-	jge move2
-	jmp move1
+	je move6
+	jl move5
+	jmp move7
 
-move2:
-	mrmovq (%rdi), %r8
-	rmmovq %r8, (%rsi)
-	mrmovq 8(%rdi), %r9
-	rmmovq %r9, 8(%rsi)
+left:
+	iaddq $3, %rdx
+	je move1
+	iaddq $-1, %rdx
+	je move2
+	jg move3	
+	ret
+
+move7:
+	mrmovq $48(%rdi), %r8
+	rmmovq %r8, $48(%rsi)
 	andq %r8, %r8
-	jle m2a1
+	jle move6
 	iaddq $1, %rax
-m2a1:
-	andq %r9, %r9
-	jle m2a2
+move6:
+	mrmovq $40(%rdi), %r8
+	rmmovq %r8, $40(%rsi)
+	andq %r8, %r8
+	jle move5
 	iaddq $1, %rax
-m2a2:
-	andq %rdx, %rdx
-	je Done
-	iaddq $16, %rdi
-	iaddq $16, %rsi
-	jmp move1
-
-move1:	
+move5:
+	mrmovq $32(%rdi), %r8
+	rmmovq %r8, $32(%rsi)
+	andq %r8, %r8
+	jle move4
+	iaddq $1, %rax
+move4:
+	mrmovq $24(%rdi), %r8
+	rmmovq %r8, $24(%rsi)
+	andq %r8, %r8
+	jle move3
+	iaddq $1, %rax
+move3:
+	mrmovq $16(%rdi), %r8
+	rmmovq %r8, $16(%rsi)
+	andq %r8, %r8
+	jle move2
+	iaddq $1, %rax
+move2:
+	mrmovq $8(%rdi), %r8
+	rmmovq %r8, $8(%rsi)
+	andq %r8, %r8
+	jle move1
+	iaddq $1, %rax
+move1:
 	mrmovq (%rdi), %r8
 	rmmovq %r8, (%rsi)
 	andq %r8, %r8
 	jle Done
 	iaddq $1, %rax
+
 ##################################################################
 # Do not modify the following section of code
 # Function epilogue.
